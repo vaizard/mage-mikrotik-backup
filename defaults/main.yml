@@ -1,0 +1,14 @@
+---
+
+mikrotik_backup_version: head"
+mikrotik_backup_path: /opt/mikrotik-backup
+mikrotik_backup_cron_weekday: *
+mikrotik_backup_cron_hour: 5,17
+mikrotik_backup_cron_minute: 33
+mikrotik_backup_ssh_config_path: /etc/ssh/config.d/mikrotik-backup
+mikrotik_backup_ssh_config: []
+#mikrotik_backup_ssh_config:
+#  - Host: uniquename
+#    Hostname: mikro.tik.com
+#    Port: 12022
+#    User: admin

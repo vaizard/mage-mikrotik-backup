@@ -1,0 +1,19 @@
+{% for cfg in mikrotik_backup_ssh_config %}
+{# I want name, Host and Hostname at top #}
+{% if cfg.name|default(false) %}
+##  {{ cfg.name }}
+{% endif %}
+Host {{ cfg.Host }}
+{% if cfg.Hostname|default(false) %}
+    Hostname {{ cfg.Hostname }}
+{% endif -%}
+
+{% for key,value in cfg.iteritems() %}
+{% if key == 'name' or key == 'Host' or key == 'Hostname' %}
+{# Already configured above so do nothing #}
+{% else %}
+    {{ key }} {{ value }}
+{% endif -%}
+{% endfor %}
+
+{% endfor %}

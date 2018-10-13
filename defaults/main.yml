@@ -1,14 +1,16 @@
 ---
 
-mikrotik_backup_version: head
-mikrotik_backup_path: /opt/mikrotik-backup
-mikrotik_backup_cron_weekday: *
-mikrotik_backup_cron_hour: 5,17
-mikrotik_backup_cron_minute: 33
-mikrotik_backup_ssh_config_path: /etc/ssh/config.d/mikrotik-backup
+mikrotik_backup_version: "HEAD"
+mikrotik_backup_path: "/opt/mikrotik-backup"
+mikrotik_backup_cron_weekday: "*"
+mikrotik_backup_cron_hour: "5,17"
+mikrotik_backup_cron_minute: "44"
+mikrotik_backup_cron_user: "root"
+mikrotik_backup_repo: "/{{ mikrotik_backup_cron_user if mikrotik_backup_cron_user == 'root' else 'home/' + mikrotik_backup_cron_user}}/mikrotik-backup-repo"
+mikrotik_backup_ssh_config_path: "/etc/ssh/config.d/mikrotik-backup"
 mikrotik_backup_ssh_config: []
 #mikrotik_backup_ssh_config:
-#  - Host: uniquename
-#    Hostname: mikro.tik.com
+#  - Host: "uniquename"
+#    Hostname: "mikro.tik.com"
 #    Port: 12022
 #    User: admin

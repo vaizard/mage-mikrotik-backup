@@ -1,24 +1,37 @@
 ---
 
-- name: Clone mikrotik-backup from github
-  git: https://github.com/vaizard/mikrotik-backup dest={{ mikrotik_backup_path }} version={{ mikrotik_backup_version }}
+- name: "Clone mikrotik-backup from github"
+  git: repo=https://github.com/vaizard/mikrotik-backup dest={{ mikrotik_backup_path }} version={{ mikrotik_backup_version }} force=yes
 
-- name: Ensure mikrotik-backup's openssh config is set.
+- name: "Ensure that the correct repo path is used."
+  lineinfile:
+    path: "{{ mikrotik_backup_path }}/backup.sh"
+    regexp: '^DIR='
+    line: "DIR={{ mikrotik_backup_repo }}"
+
+- name: "Ensure mikrotik-backup's openssh config is set."
   template:
     src: ssh_config.j2
     dest: "{{ mikrotik_backup_ssh_config_path }}"
 
-- name: Ensure that mikrotik-backup's host list is configured
+- name: "Ensure that mikrotik-backup's host list is configured"
   template:
     src: host-list.j2
     dest: "{{ mikrotik_backup_path }}/host-list"
 
-- name: Ensure cron backup jobs are configured
+- name: "Ensure target repo dir exists"
+  file:
+    path: "{{ mikrotik_backup_repo }}"
+    owner: "{{ mikrotik_backup_cron_user }}"
+    group: "{{ mikrotik_backup_cron_user }}"
+    state: directory
+
+- name: "Ensure cron backup jobs are configured"
   cron:
     name: "Mikrotik backups"
-    minute:  "{{ mikrotik_backup_cron_minute }}"
-    hour:  "{{ mikrotik_backup_cron_hour }}"
-    weekday: "{{ mikrotik_backup_cron_weekday }}"
-    job: "ls -alh > /dev/null"
-  
+    minute:  "{{ mikrotik_backup_cron_minute | default('33') }}"
+    hour:  "{{ mikrotik_backup_cron_hour | default('5') }}"
+    weekday: "{{ mikrotik_backup_cron_weekday | default('*') }}"
+    job: "cat {{ mikrotik_backup_path }}/host-list | {{ mikrotik_backup_path }}/backup.sh"
+    user: "{{ mikrotik_backup_cron_user | default('root') }}"
   
